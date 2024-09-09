@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{ padding: 0; margin: 0; box-sizing: border-box;  font-family: "Poppins", sans-serif; }
+body {
+    font-family: "Poppins", sans-serif !important;
+    background: #F4F6FA;
+    height: 100vh;
+}
+
+
+/* home page style here */
+.card-inner {
+    padding: 10px;
+    position: absolute;
+    width: 80%;
+    margin: 10px 20px;
+}
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8%;
+    margin-bottom: 5%;
+  }
+  .greeting {
+    text-align: left;
+    color: #467AFB;
+  }
+  .greeting h2 {
+    font-size: 20px;
+  }
+  .greeting p {
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .profile-picture img{
+    margin-top: -15px;
+  }
+  .time-display {
+    font-size: 48px;
+    color: #467AFB;
+    margin-top: 15%;
+  }
+  .time-display h1 {
+    font-size: 45px; font-weight: 500; letter-spacing: 1px;
+  }
+  .time-display p {
+    font-size: 16px; margin-top: 5px;
+  }
+  .checkin-section {
+    margin: 20px 10px;
+    margin-top: 12%;
+  }
+  
+  /* .password-input input {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 10px;
+  } */
+  .incorrectPass {
+    color: red; font-size: 12px; text-align: center; margin-top: 1px;
+    
+  }
+
+  .status-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20%;
+    /* position: relative; */
+  }
+  .status-section div {
+    text-align: center;
+  }
+  .status-section div h2 {
+    font-size: 17px; font-weight: 400;
+  }
+  .status-section div span img {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    align-items: center;
+  }
+  .check-img {
+    width: 50px;
+    position: absolute;
+  }
+  .status-section div h2,
+  .status-section div p{
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    align-items: center !important;
+    text-align: center;
+    color: #6e6a6a;
+    
+  }
+  .footer-nav {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #467AFB;
+    color: white;
+    border-radius: 15px;
+    margin-top: 20%;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    background-color: transparent;
+    color: #F4F6FA;
+    border-radius: 5px;
+  }
+  button:hover {
+    background-color: #F4F6FA;
+    color: #467AFB;
+  }
+  button:active {
+    background-color: #F4F6FA;
+    color: #467AFB;
+  }
