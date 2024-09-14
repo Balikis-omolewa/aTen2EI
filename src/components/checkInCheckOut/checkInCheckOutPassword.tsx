@@ -9,15 +9,15 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import BackButton from '../pages/BackButton';
 
 const CheckInOutPassword = () => {
-  const [time, setTime] = useState(moment().format('h:mm a')); // Current time
-  const [date, setDate] = useState(moment().format('MMMM Do, YYYY')); // Current date
-  const [checkInTime, setCheckInTime] = useState(null); // Stores check-in time
-  const [checkOutTime, setCheckOutTime] = useState(null); // Stores check-out time
-  const [totalHours, setTotalHours] = useState('--:--'); // Displays total hours
+  const [time, setTime] = useState(moment().format('h:mm a')); // show current time
+  const [date, setDate] = useState(moment().format('MMMM Do, YYYY')); // show current date
+  const [checkInTime, setCheckInTime] = useState<string | null>(null); // this stores check-in time
+  const [checkOutTime, setCheckOutTime] = useState<string | null>(null); // this stores check-out time
+  const [totalHours, setTotalHours] = useState<string | null>(null); // this displays total hours
   const [password, setPassword] = useState(''); // Password input
   const [errorMessage, setErrorMessage] = useState(''); // Error message
-  const [userImage, setUserImage] = useState(null); // Stores user's uploaded image
-  const [greetUser, setGreetUser] = useState(null);
+  const [userImage, setUserImage] = useState<string | null>(null); // Stores user's uploaded image
+  const [greetUser, setGreetUser] = useState('');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,13 +27,14 @@ const CheckInOutPassword = () => {
   }, []);
 
   // Handle profile image upload
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setUserImage(imageUrl); // Set user image
     }
   };
+
   const handleGreetUser = () => {
     const currentHour = moment().hour(); 
     let greeting = '';
@@ -53,7 +54,7 @@ const CheckInOutPassword = () => {
   }, []);
 
   const handleAction = () => {
-    if (password === '1234') { // Replace with actual password check logic
+    if (password === '1234') { // Will later integrate user password to check in/out
       if (!checkInTime) {
         // If user is checking in
         const currentTime = moment().format('h:mm a');
@@ -63,10 +64,10 @@ const CheckInOutPassword = () => {
         // If user is checking out
         const currentTime = moment();
         setCheckOutTime(currentTime.format('h:mm a'));
-        
+
         const checkInMoment = moment(checkInTime, 'h:mm a');
         const diffInHours = currentTime.diff(checkInMoment, 'hours', true);
-        setTotalHours(diffInHours.toFixed(2)); // Calculates total time in hours
+        setTotalHours(diffInHours ? diffInHours.toFixed(2) : '--:--'); // Calculates total time in hours
       }
       setPassword(''); // Clear the password input after successful action
     } else {

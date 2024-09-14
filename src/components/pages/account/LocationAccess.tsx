@@ -1,21 +1,31 @@
-import { useState } from "react";
-import { collection, addDoc, query, where, getDocs, setDoc, doc } from "firebase/firestore"; 
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
-import { db } from "../../../firebase/firebaseConfig"; 
+import { useState, useEffect } from "react";
+import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { db } from "../../../firebase/firebaseConfig";
 import logo from '../../../assets/img/w-logo.png';
 import location from '../../../assets/img/location.png';
 import Modal from 'react-modal';
 import BackButton from '../BackButton';
 
-Modal.setAppElement('#root');
-
 function LocationAccess() {
-  const [locationAllowed, setLocationAllowed] = useState(null);
+  const [locationAllowed, setLocationAllowed] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate for redirect
+  const [userId, setUserId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // Function to get location and store it in Firestore
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      console.error('User is not authenticated');
+    }
+  }, []);
+
   const handleAllowLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -25,14 +35,16 @@ function LocationAccess() {
           setLoading(true);
 
           try {
-            // Store location in Firestore
-            await saveLocationAndUserData(latitude, longitude, { userId: "12345", userName: "John Doe" }); // Example user data
-
-            // After saving location, open modal and start redirect timer
-            setModalIsOpen(true);
-            setTimeout(() => {
-              navigate('/signin'); // Redirect to sign-in page after 5 seconds
-            }, 5000); // 5 seconds delay
+            if (userId) {
+              await saveLocationForUser(userId, latitude, longitude);
+              setModalIsOpen(true);
+              setTimeout(() => {
+                navigate('/signin');
+              }, 5000);
+            } else {
+              console.error('User ID is missing');
+              alert('User information is missing');
+            }
           } catch (error) {
             console.error('Error storing location to Firestore:', error);
             alert("Error saving location data. Check console for details.");
@@ -43,7 +55,12 @@ function LocationAccess() {
         (error) => {
           setLocationAllowed(false);
           console.error("Location access denied:", error);
-          setModalIsOpen(true); // Open modal if access denied
+          setModalIsOpen(true);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
         }
       );
     } else {
@@ -51,47 +68,26 @@ function LocationAccess() {
     }
   };
 
-  // Function to check if the location exists, and store user data
-  const saveLocationAndUserData = async (latitude, longitude, userData) => {
+  const saveLocationForUser = async (userId: string, latitude: number, longitude: number) => {
     try {
-      const locationsRef = collection(db, "locations");
+      const userRef = doc(db, "locations", userId);
+      const docSnapshot = await getDoc(userRef);
 
-      // Query Firestore to check if location exists
-      const q = query(locationsRef, where("latitude", "==", latitude), where("longitude", "==", longitude));
-      const querySnapshot = await getDocs(q);
+      const locationData = {
+        latitude,
+        longitude,
+        timestamp: new Date(),
+      };
 
-      if (querySnapshot.empty) {
-        // Location does not exist, create new document for location
-        const locationDocRef = await addDoc(locationsRef, {
-          latitude,
-          longitude,
-          timestamp: new Date(),
-          users: [userData] // Store user data as an array under 'users'
-        });
-        console.log("New location created with ID: ", locationDocRef.id);
+      if (docSnapshot.exists()) {
+        await updateDoc(userRef, { location: locationData });
+        console.log("Location data updated for user:", userId);
       } else {
-        // Location exists, update existing document with user data
-        querySnapshot.forEach(async (docSnapshot) => {
-          const locationDocRef = doc(db, "locations", docSnapshot.id);
-          const locationData = docSnapshot.data();
-
-          // Check if user data already exists
-          const existingUsers = locationData.users || [];
-          const userExists = existingUsers.find(user => user.userId === userData.userId);
-
-          if (!userExists) {
-            // Add new user to the 'users' array
-            await setDoc(locationDocRef, {
-              users: [...existingUsers, userData]
-            }, { merge: true }); // Use merge to preserve existing fields
-            console.log(`User data added to location ${docSnapshot.id}`);
-          } else {
-            console.log(`User already exists for location ${docSnapshot.id}`);
-          }
-        });
+        await setDoc(userRef, { location: locationData });
+        console.log("User document created and location data saved:", userId);
       }
     } catch (e) {
-      console.error("Error saving location or user data to Firestore:", e);
+      console.error("Error saving location to user's document:", e);
     }
   };
 
@@ -113,11 +109,7 @@ function LocationAccess() {
       <div className="card-content card-content-bottom">
         <div className="mini-card">
           <div>
-            <img
-              src={location}
-              alt="Location Icon"
-              className="location-img"
-            />
+            <img src={location} alt="Location Icon" className="location-img" />
           </div>
           <h4 style={styles.enable}>ENABLE LOCATION</h4>
           <p style={styles.text}>
@@ -132,15 +124,11 @@ function LocationAccess() {
           </button>
         </div>
       </div>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={modalStyles}
-      >
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalStyles}>
         <span onClick={closeModal} style={modalStyles.close}>X</span>
         <div style={modalStyles.card}>
           <h2>{locationAllowed ? 'Location Access' : 'Access Denied'}</h2>
-          <p>{locationAllowed ? `Current Location! Address captured.` : "Please enable location access to continue using the app."}</p>
+          <p>{locationAllowed ? "Current Location! Address captured." : "Please enable location access to continue using the app."}</p>
           <button onClick={closeModal} style={modalStyles.button}>OK</button>
         </div>
       </Modal>
