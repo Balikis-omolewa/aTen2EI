@@ -2,11 +2,83 @@ import { useState, useEffect } from "react";
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import { db } from "../../../firebase/firebaseConfig";
+import { db } from "../../../firebase/firebaseConfig"; // Adjust the type definition for this
 import logo from '../../../assets/img/w-logo.png';
 import location from '../../../assets/img/location.png';
 import Modal from 'react-modal';
 import BackButton from '../BackButton';
+import { CSSProperties } from 'react';
+
+// Define styles object
+const styles: { [key: string]: CSSProperties } = {
+  enable: {
+    color: "#4A82DD",
+    fontSize: "20px",
+    marginTop: "20px",
+    fontWeight: "500",
+  },
+  text: {
+    color: "#7d7d7d",
+    fontSize: "14px",
+  },
+  secondaryButton: {
+    backgroundColor: "#fff",
+    color: "#4A82DD",
+    padding: "15px",
+    border: "none",
+    fontWeight: "bold",
+    cursor: "pointer",
+    float: "right",
+  },
+};
+
+// Modal styles
+const modalStyles = {
+  content: {
+    top: '55%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translate(-50%, -50%)',
+    padding: '20px',
+    borderRadius: '12px',
+    width: '80%',
+    maxWidth: '400px',
+    textAlign: 'center',
+    zIndex: '10000',
+    position: 'fixed',
+    border: 'none',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+  },
+  overlay: {
+    zIndex: '10000',
+    position: 'fixed',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+  },
+  card: { 
+    marginBottom: '50px',
+    marginTop: '60px',
+  },
+  close: {
+    padding: '10px',
+    color: '#0b0b0b',
+    fontSize: '20px',
+    border: 'none',
+    cursor: 'pointer',
+    fontWeight: '500',
+    float: 'right',
+  },
+  button: {
+    width: '80%',
+    padding: '15px',
+    backgroundColor: '#4A82DD',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginTop: '20px',
+  },
+};
 
 function LocationAccess() {
   const [locationAllowed, setLocationAllowed] = useState<boolean | null>(null);
@@ -135,71 +207,5 @@ function LocationAccess() {
     </div>
   );
 }
-
-// Modal styles
-const modalStyles = {
-  content: {
-    top: '55%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    transform: 'translate(-50%, -50%)',
-    padding: '20px',
-    borderRadius: '12px',
-    width: '80%',
-    maxWidth: '400px',
-    textAlign: 'center',
-    zIndex: '10000',
-    position: 'fixed',
-    border: 'none',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-  },
-  overlay: {
-    zIndex: '10000',
-    position: 'fixed',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-  },
-  card: { 
-    marginBottom: '50px',
-    marginTop: '60px',
-  },
-  close: {
-    padding: '10px',
-    color: '#0b0b0b',
-    fontSize: '20px',
-    border: 'none',
-    cursor: 'pointer',
-    fontWeight: '500',
-    float: 'right',
-  },
-  button: {
-    width: '80%',
-    padding: '15px',
-    backgroundColor: '#4A82DD',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    marginTop: '20px'
-  },
-};
-
-const styles = {
-  enable: {
-    color: "#4A82DD",
-    fontSize: "20px",
-    marginTop: "20px",
-    fontWeight: "500",
-  },
-  text: {
-    color: "#7d7d7d",
-    fontSize: "14px",
-  },
-  secondaryButton: {
-    backgroundColor: "#fff",
-    color: "#4A82DD",
-    padding: "15px",
-  },
-};
 
 export default LocationAccess;

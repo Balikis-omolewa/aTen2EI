@@ -10,7 +10,6 @@ import BackButton from '../pages/BackButton';
 
 const CheckInOutPassword = () => {
   const [time, setTime] = useState(moment().format('h:mm a')); // show current time
-  const [date, setDate] = useState(moment().format('MMMM Do, YYYY')); // show current date
   const [checkInTime, setCheckInTime] = useState<string | null>(null); // this stores check-in time
   const [checkOutTime, setCheckOutTime] = useState<string | null>(null); // this stores check-out time
   const [totalHours, setTotalHours] = useState<string | null>(null); // this displays total hours
@@ -104,7 +103,7 @@ const CheckInOutPassword = () => {
 
       <div className="time-display">
         <h1>{time}</h1> {/* Display current time */}
-        <p>{date}</p> {/* Display current date */}
+        <p>{moment().format('MMMM Do, YYYY')}</p> {/* Display current date */}
       </div>
 
       <div className="checkin-section">

@@ -7,20 +7,16 @@ import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { Modal, Button } from 'react-bootstrap'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { IoIosArrowBack } from "react-icons/io";
-import { FaRegUser } from "react-icons/fa";
-import { MdOutlineMailOutline } from "react-icons/md";
-import { FiPhone } from "react-icons/fi";
-import { MdLockOutline } from "react-icons/md";
+import { IoIosArrowBack, IoIosCar  } from "react-icons/io";
+import { FaRegUser, FaRegIdCard, FaLongArrowAltLeft } from "react-icons/fa";
+import { MdOutlineMailOutline, MdLockOutline, MdOutlineLaptopChromebook  } from "react-icons/md";
 import { FaDiscourse } from "react-icons/fa6";
-import { MdOutlineLaptopChromebook } from "react-icons/md";
-import { IoIosCar } from "react-icons/io";
 import { SiUnlicense } from "react-icons/si";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiCityLight } from "react-icons/pi";
-import { FaRegIdCard } from "react-icons/fa";
 import { FcDepartment } from "react-icons/fc";
-import { FaLongArrowAltLeft, FaLongArrowAltRight } from "react-icons/fa";
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 const SignUp = () => {
   const [step, setStep] = useState(1);
@@ -55,6 +51,13 @@ const SignUp = () => {
     });
   };
 
+  const handlePhoneChange = (phone) => {
+    setFormData({
+      ...formData,
+      phone: phone || '' // Ensure phone number is updated to an empty string if `null`
+    });
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -177,14 +180,15 @@ const SignUp = () => {
               </div>
               <div className="form-group">
                 <div className="form-field">
-                  <FiPhone className='icon' style={{ fontSize: "1.4rem"}} />
-                  <input
+                   {/* <FiPhone className='icon' style={{ fontSize: "1.4rem"}} /> */}
+                   <PhoneInput
                     type="tel"
                     id="phone"
                     name="phone"
+                    defaultCountry="NG"
                     placeholder='Phone Number'
                     value={formData.phone}
-                    onChange={handleChange}
+                    onChange={handlePhoneChange}
                     required
                   />
                 </div>
@@ -263,8 +267,8 @@ const SignUp = () => {
                     </div>
                   </div>
                   <div style={{ textAlign: "left", cursor: "pointer", fontSize: "14px"}} onClick={handleBack}>
-                 <FaLongArrowAltLeft /> Go Back
-              </div>
+                    <FaLongArrowAltLeft /> Go Back
+                  </div>
                 </>
               )}
               {role === 'Staff' && (
@@ -297,39 +301,6 @@ const SignUp = () => {
                   </div>
                   <div className="form-group">
                     <div className="form-field">
-                      <IoIosCar className='icon' style={{ fontSize: "1.5rem"}} />
-                      <input
-                        type="text"
-                        id="carModel"
-                        name="carModel"
-                        placeholder='Car Model (optional)'
-                        value={formData.carModel}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <div className="form-field">
-                      <SiUnlicense className='icon' style={{ fontSize: "1.4rem"}} />
-                      <input
-                        type="text"
-                        id="licensePlateNumber"
-                        name="licensePlateNumber"
-                        placeholder='License Plate Number (optional)'
-                        value={formData.licensePlateNumber}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "left", cursor: "pointer", fontSize: "14px"}} onClick={handleBack}>
-                 <FaLongArrowAltLeft /> Go Back
-              </div>
-                </>
-              )}
-              {role === 'Visitor' && (
-                <>
-                  <div className="form-group">
-                    <div className="form-field">
                       <IoLocationOutline className='icon' style={{ fontSize: "1.4rem"}} />
                       <input
                         type="text"
@@ -354,6 +325,26 @@ const SignUp = () => {
                       />
                     </div>
                   </div>
+                  <div style={{ textAlign: "left", cursor: "pointer", fontSize: "14px"}} onClick={handleBack}>
+                    <FaLongArrowAltLeft /> Go Back
+                  </div>
+                </>
+              )}
+              {role === 'Visitor' && (
+                <>
+                  <div className="form-group">
+                    <div className="form-field">
+                      <FaDiscourse className='icon' />
+                      <input
+                        type="text"
+                        id="fieldOfStudy"
+                        name="fieldOfStudy"
+                        placeholder='Field of Study'
+                        value={formData.fieldOfStudy}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
                   <div className="form-group">
                     <div className="form-field">
                       <IoIosCar className='icon' style={{ fontSize: "1.5rem"}} />
@@ -361,7 +352,7 @@ const SignUp = () => {
                         type="text"
                         id="carModel"
                         name="carModel"
-                        placeholder='Car Model (optional)'
+                        placeholder='Car Model'
                         value={formData.carModel}
                         onChange={handleChange}
                       />
@@ -374,33 +365,33 @@ const SignUp = () => {
                         type="text"
                         id="licensePlateNumber"
                         name="licensePlateNumber"
-                        placeholder='License Plate Number (optional)'
+                        placeholder='License Plate Number'
                         value={formData.licensePlateNumber}
                         onChange={handleChange}
                       />
                     </div>
                   </div>
                   <div style={{ textAlign: "left", cursor: "pointer", fontSize: "14px"}} onClick={handleBack}>
-                 <FaLongArrowAltLeft /> Go Back
-              </div>
+                    <FaLongArrowAltLeft /> Go Back
+                  </div>
                 </>
               )}
-              <button type="submit" className='action-btn'>Submit</button>
+              <button type="submit" className='action-btn'>Sign Up</button>
             </>
           )}
         </form>
       </div>
 
       {/* Success Modal */}
-      <Modal show={showSuccessModal} onHide={handleCloseModal} centered className='mt-5'>
-        <Modal.Header closeButton style={{ borderBottom: 'none' }}></Modal.Header>
-        <Modal.Title className='text-center mt-2' style={{fontWeight: "800"}}>Success!</Modal.Title>
+      <Modal show={showSuccessModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Registration Successful</Modal.Title>
+        </Modal.Header>
         <Modal.Body>
-          <p className='text-center'>Your account has been successfully created! Please check your phone sms for OTP verification code.
-          </p>
+          <p>Your registration was successful! Please check your email to verify your account.</p>
         </Modal.Body>
-        <Modal.Footer style={{ borderTop: 'none', marginBottom: '20px' }}>
-          <Button variant="primary" className='w-100 mt-3 p-2 text-light font-20' onClick={handleCloseModal}>OK</Button>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
     </div>

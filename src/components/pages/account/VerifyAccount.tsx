@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
+import { getAuth, User } from 'firebase/auth';
 import logo from '../../../assets/img/w-logo.png'; 
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -14,7 +14,7 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     const checkVerificationStatus = async () => {
-      const user = auth.currentUser;
+      const user = auth.currentUser as User; // Cast to User type
       if (user) {
         await user.reload(); // Refresh user data
         if (user.emailVerified) {
@@ -42,10 +42,10 @@ const VerifyEmail = () => {
   };
 
   const resendVerificationEmail = async () => {
-    const user = auth.currentUser;
+    const user = auth.currentUser as User; // Cast to User type
     if (user) {
       try {
-        await user.sendEmailVerification();
+        await user.sendEmailVerification(); // Send verification email
         setError('Verification email sent. Please check your inbox.');
       } catch (err) {
         setError('Failed to send verification email.');
